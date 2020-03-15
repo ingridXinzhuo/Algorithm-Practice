@@ -1,0 +1,23 @@
+//思路来自 https://www.youtube.com/watch?v=epufZl6ImOg
+//看完自己敲了一遍，Runtime: 4 ms, faster than 86.28% 
+//happygirlzt姐姐太厉害了我粉了
+
+class Solution {
+    public int maximalSquare(char[][] matrix) {
+        if (matrix.length == 0 || matrix == null)
+            return 0;
+        int rowMax = matrix.length;
+        int columnMax = matrix[0].length;
+        int[][] squareNumber = new int[rowMax + 1][columnMax + 1];
+        int max = 0;
+        for (int i = 1; i <= rowMax; i++){
+            for (int j = 1; j <= columnMax; j++){
+                if (matrix[i - 1][j - 1] == '1'){
+                    squareNumber[i][j] = Math.min(squareNumber[i - 1][j],Math.min(squareNumber[i][j - 1], squareNumber[i - 1][j - 1])) + 1;
+                    max = Math.max(max,squareNumber[i][j]);
+                }
+            }
+        }
+        return max * max;
+    }
+}
