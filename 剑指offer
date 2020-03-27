@@ -1,0 +1,150 @@
+//----------------------------------------Day one 27th March 2020----------------------------------------------
+1.二维数组中的查找
+在一个二维数组中（每个一维数组的长度相同），每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。
+请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
+//方法一 暴力拆解
+public class Solution {
+    public boolean Find(int target, int [][] array) {
+            for(int i = 0; i < array.length; i++){
+                for (int j = 0; j < array[0].length; j++){
+                    if (target == array[i][j])
+                        return true;
+                }
+            }
+            return false;
+    }
+}
+//运行时间：148ms
+//占用内存：17308k
+
+//方法二 二分优化（不知道为什么感觉也没快多少，可能是我的二分有问题？）
+public class Solution {
+    public boolean Find(int target, int [][] array) {
+        if (array.length == 0 || array[0].length == 0)
+            return false;
+            for(int i = 0; i < array.length; i++){
+                if(array[i][array[0].length/2] < target)
+                {
+                    for (int j = array[0].length/2; j < array[0].length; j++)
+                    {
+                        if (target == array[i][j])
+                            return true;
+                     }
+                }
+                else if (array[i][array[0].length/2] > target){
+                    for (int j = 0; j < array[0].length/2; j++)
+                    {
+                        if (target == array[i][j])
+                            return true;
+                     }
+                }
+                else
+                    return true;
+            }
+            return false;
+    }
+}
+//运行时间：138ms
+//占用内存：17300k
+
+--------------------------------------------------------------------------------------------------------------
+
+2. 替换空格（多解法）
+请实现一个函数，将一个字符串中的每个空格替换成“%20”。例如，当字符串为We Are Happy.则经过替换之后的字符串为We%20Are%20Happy。
+public class Solution {
+    public String replaceSpace(StringBuffer str) {
+    	if (str.length() == 0)
+            return str.toString();
+        else{
+            for(int i = 0; i < str.length(); i ++){
+                if(str.charAt(i) == ' '){
+                    str.replace(i,i + 1,"%20");
+                }
+            }
+            return str.toString();
+        }
+    }
+}
+
+//运行时间：15ms
+//占用内存：9656k
+//本题更多解法思路来自https://blog.csdn.net/Shauna_Wu/article/details/77721109
+
+---------------------------------------------------------------------------------------------------------------
+
+3. 从头到尾打印链表
+（反转链表并加入arraylist）
+输入一个链表，按链表从尾到头的顺序返回一个ArrayList。
+/**
+*    public class ListNode {
+*        int val;
+*        ListNode next = null;
+*
+*        ListNode(int val) {
+*            this.val = val;
+*        }
+*    }
+*
+*/
+
+//方法1 普通反转链表
+import java.util.ArrayList;
+public class Solution {
+    public ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
+        ArrayList<Integer> al = new ArrayList<>();
+        if (listNode == null || listNode.next == null)
+            return al;
+        ListNode pre = null;
+        ListNode curr = listNode;
+        while (curr != null){
+            ListNode temp = curr.next;
+            curr.next = pre;
+            pre = curr;
+            curr = temp;
+        }
+        ListNode reversed = pre;
+        while (reversed != null){
+            al.add(reversed.val);
+            reversed = reversed.next;
+        }
+        return al;
+    }
+}
+//运行时间：15ms
+//占用内存：9292k
+
+//方法2 递归（递归的时候需要判断是否空指针，不然会报nullpointerexception）
+import java.util.ArrayList;
+public class Solution {
+    public ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
+        ArrayList<Integer> al = new ArrayList<>();
+        if (listNode == null || listNode.next == null)
+            return al;
+        ListNode reversedList = reverseNode(listNode);
+        while (reversedList != null){
+            al.add(reversedList.val);
+            reversedList = reversedList.next;
+        }
+        return al;
+    }
+    public static ListNode reverseNode(ListNode listNode){
+        ListNode reversed;
+        if (listNode.next != null)
+            reversed = reverseNode(listNode.next);
+        else
+            return listNode;
+        ListNode nxt = listNode.next;
+        nxt.next = listNode;
+        listNode.next = null;
+        return reversed;
+    }
+}
+//运行时间：15ms
+//占用内存：9396k
+
+-------------------------------------------------------------------------------------------------------------------
+
+4. 重建二叉树
+输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。
+假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
+例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
