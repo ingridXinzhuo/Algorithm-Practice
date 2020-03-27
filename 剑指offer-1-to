@@ -1,0 +1,356 @@
+//----------------------------------------Day one 27th March 2020----------------------------------------------
+---------------------------------------需要关注：3（不熟练），4（没太懂），6（考点算法优化）
+1.二维数组中的查找
+在一个二维数组中（每个一维数组的长度相同），每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。
+请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
+//方法一 暴力拆解
+public class Solution {
+    public boolean Find(int target, int [][] array) {
+            for(int i = 0; i < array.length; i++){
+                for (int j = 0; j < array[0].length; j++){
+                    if (target == array[i][j])
+                        return true;
+                }
+            }
+            return false;
+    }
+}
+//运行时间：148ms
+//占用内存：17308k
+
+//方法二 二分优化（不知道为什么感觉也没快多少，可能是我的二分有问题？）
+public class Solution {
+    public boolean Find(int target, int [][] array) {
+        if (array.length == 0 || array[0].length == 0)
+            return false;
+            for(int i = 0; i < array.length; i++){
+                if(array[i][array[0].length/2] < target)
+                {
+                    for (int j = array[0].length/2; j < array[0].length; j++)
+                    {
+                        if (target == array[i][j])
+                            return true;
+                     }
+                }
+                else if (array[i][array[0].length/2] > target){
+                    for (int j = 0; j < array[0].length/2; j++)
+                    {
+                        if (target == array[i][j])
+                            return true;
+                     }
+                }
+                else
+                    return true;
+            }
+            return false;
+    }
+}
+//运行时间：138ms
+//占用内存：17300k
+
+--------------------------------------------------------------------------------------------------------------
+
+2. 替换空格（多解法）
+请实现一个函数，将一个字符串中的每个空格替换成“%20”。例如，当字符串为We Are Happy.则经过替换之后的字符串为We%20Are%20Happy。
+public class Solution {
+    public String replaceSpace(StringBuffer str) {
+    	if (str.length() == 0)
+            return str.toString();
+        else{
+            for(int i = 0; i < str.length(); i ++){
+                if(str.charAt(i) == ' '){
+                    str.replace(i,i + 1,"%20");
+                }
+            }
+            return str.toString();
+        }
+    }
+}
+
+//运行时间：15ms
+//占用内存：9656k
+//本题更多解法思路来自https://blog.csdn.net/Shauna_Wu/article/details/77721109
+
+---------------------------------------------------------------------------------------------------------------
+
+3. 从头到尾打印链表
+（反转链表并加入arraylist）
+输入一个链表，按链表从尾到头的顺序返回一个ArrayList。
+/**
+*    public class ListNode {
+*        int val;
+*        ListNode next = null;
+*
+*        ListNode(int val) {
+*            this.val = val;
+*        }
+*    }
+*
+*/
+
+//方法1 普通反转链表
+import java.util.ArrayList;
+public class Solution {
+    public ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
+        ArrayList<Integer> al = new ArrayList<>();
+        if (listNode == null || listNode.next == null)
+            return al;
+        ListNode pre = null;
+        ListNode curr = listNode;
+        while (curr != null){
+            ListNode temp = curr.next;
+            curr.next = pre;
+            pre = curr;
+            curr = temp;
+        }
+        ListNode reversed = pre;
+        while (reversed != null){
+            al.add(reversed.val);
+            reversed = reversed.next;
+        }
+        return al;
+    }
+}
+//运行时间：15ms
+//占用内存：9292k
+
+//方法2 递归（递归的时候需要判断是否空指针，不然会报nullpointerexception）
+import java.util.ArrayList;
+public class Solution {
+    public ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
+        ArrayList<Integer> al = new ArrayList<>();
+        if (listNode == null || listNode.next == null)
+            return al;
+        ListNode reversedList = reverseNode(listNode);
+        while (reversedList != null){
+            al.add(reversedList.val);
+            reversedList = reversedList.next;
+        }
+        return al;
+    }
+    public static ListNode reverseNode(ListNode listNode){
+        ListNode reversed;
+        if (listNode.next != null)
+            reversed = reverseNode(listNode.next);
+        else
+            return listNode;
+        ListNode nxt = listNode.next;
+        nxt.next = listNode;
+        listNode.next = null;
+        return reversed;
+    }
+}
+//运行时间：15ms
+//占用内存：9396k
+
+-------------------------------------------------------------------------------------------------------------------
+
+4. 重建二叉树  （非常需要复习重新写几遍，没有完全理解）
+(会做题不会写算法，恨不得翻到机器里自己手动替他算：）被自己菜哭)
+输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。
+假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
+例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
+
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+ 方法递归//startPre+i-startIn 到底为啥这么写我还是不大明白。。。。。
+public class Solution {
+    public TreeNode reConstructBinaryTree(int [] pre,int [] in) {
+        TreeNode tree = constructTree(0,pre.length - 1,pre,0,in.length - 1,in);
+        return tree;
+    }
+    public TreeNode constructTree(int startPre, int endPre,int [] pre,int startIn,int endIn,int [] in){
+        if(startPre>endPre||startIn>endIn)
+            return null;
+        TreeNode root=new TreeNode(pre[startPre]);
+        for(int i=startIn;i<=endIn;i++)
+            if(in[i] == pre[startPre]){
+                root.left=constructTree(startPre+1,startPre+i-startIn,pre,startIn,i-1,in);
+                root.right=constructTree(i-startIn+startPre+1,endPre,pre,i+1,endIn,in);
+            }
+        return root;
+    }
+}
+
+运行时间：191ms
+占用内存：22816k
+更多方法：https://blog.csdn.net/ouyangyanlan/article/details/73163509 
+（第一种比较接近我原来写了一半的思路，拿root把inorder数组分开去推，但是感觉没有纯递归简单）
+（主要是java不支持分割数组，没办法，也用不了js的splice这种方法。。）
+
+-------------------------------------------------------------------------------------------------------------------
+
+5.用两个栈实现一个队列 (牛客网没给源代码，都不知道方法咋调用的。。。建议去看leetcode原题)
+用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。
+import java.util.Stack;
+
+public class Solution {
+    Stack<Integer> stack1 = new Stack<Integer>();
+    Stack<Integer> stack2 = new Stack<Integer>();
+    
+    public void push(int node) {
+        stack1.push(node);
+    }
+    
+    public int pop() {
+        if (stack2.size() == 0){
+            while (stack1.size() != 0){
+                stack2.push(stack1.pop());
+            }
+        }
+        return stack2.pop();
+    }
+}
+运行时间：14ms
+占用内存：9428k
+
+6.旋转数组的最小数字
+把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。
+输入一个非递减排序的数组的一个旋转，输出旋转数组的最小元素。
+例如数组{3,4,5,1,2}为{1,2,3,4,5}的一个旋转，该数组的最小值为1。
+NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。
+
+*虽然知道所谓旋转数组就是为了考算法优化而有意为之，但还是先用了暴力拆解。
+*优化后的算法会持续跟进更新。
+*优化算法参考网址：https://www.cnblogs.com/edisonchou/p/4746561.html
+
+*自己写的借助Arrays class的自动从小到大排序法：
+import java.util.ArrayList;
+import java.util.Arrays;
+public class Solution {
+    public int minNumberInRotateArray(int [] array) {
+        if(array.length == 0)
+            return 0;
+        else{
+            Arrays.sort(array);
+            return array[0];
+        }
+    }
+}
+//运行时间：333ms
+//占用内存：31340k
+*共三种方法找最小值：https://blog.csdn.net/robert_chen1988/article/details/78032743
+*为了关注考点，建议还是（希望自己）掌握优化方法的版本哦。
+
+-------------------------------------------------------------------------------------------------------------------
+
+7.斐波那契数列
+大家都知道斐波那契数列，现在要求输入一个整数n，请你输出斐波那契数列的第n项（从0开始，第0项为0）。
+方法一 递归
+public class Solution {
+    public int Fibonacci(int n) {
+        if ( n < 1 )
+            return 0;
+        if (n == 1 || n == 2)
+            return 1;
+        return Fibonacci(n - 1) + Fibonacci(n - 2);
+    }
+}
+//运行时间：749ms
+//占用内存：9444k
+*自己用递归斐波那契写的运行时间爆炸。。。我也心态爆炸好吧，之前少写了个n == 1条件，运行时间狂飙1400ms（微笑）。
+
+方法二 普通的for循环和数组解法 （一点也不普通！跑起来超快的！递归斐波那契真是个弟弟！）
+public class Solution {
+    public int Fibonacci(int n) {
+        if (n < 1)
+            return 0;
+        else if (n == 1 || n == 2)
+            return 1;
+        int[] fib = new int[n];
+        fib[0] = 1;
+        fib[1] = 1;
+        for (int i = 2; i < n; i++){
+            fib[i] = fib[i - 1] + fib[i - 2];
+        }
+        return fib[n - 1];
+    }
+}
+//运行时间：12ms
+//占用内存：9304k
+//看了一下for循环思路，自己写了一下发现真香，真快（叹气）。
+
+-------------------------------------------------------------------------------------------------------------------
+
+8.跳台阶
+一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法（先后次序不同算不同的结果）。
+
+public class Solution {
+    public int JumpFloor(int target) {
+        if (target == 0 || target == 1)
+            return 1;
+        int[] method = new int[target + 1];
+        method[0] = 1;
+        method[1] = 1;
+        for (int i = 2; i <= target; i++){
+            method[i] = method[i - 1] + method[i - 2];
+        }
+        return method[target];
+    }
+}
+
+//运行时间：13ms
+//占用内存：9396k
+*虽然看起来仿佛和上一道题一样但实际上却差了一位，因为斐波那契的第n位就是第n位，
+*而青蛙跳台阶的第n位，如果数字从index 0开始（也就是说跳0级台阶，相当于只有一种跳法），实际上计算停止的位数应该+1，也就是n+1位。
+
+-------------------------------------------------------------------------------------------------------------------
+
+9.变态跳台阶
+一只青蛙一次可以跳上1级台阶，也可以跳上2级……它也可以跳上n级。求该青蛙跳上一个n级的台阶总共有多少种跳法。
+public class Solution {
+    public int JumpFloorII(int target) {
+        if (target <= 0) {
+                    return -1;
+                } else if (target == 1) {
+                    return 1;
+                } else {
+                    return 2 * JumpFloorII(target - 1);
+                }
+    }
+}
+
+//运行时间：15ms
+//占用内存：9284k
+*知识点：贪心算法
+*解法及解释https://www.nowcoder.com/questionTerminal/22243d016f6b47f2a6928b4313c85387?orderByHotValue=1&questionTypes=000100&mutiTagIds=592&page=1&onlyReference=false
+*因为n级台阶，第一步有n种跳法：跳1级、跳2级、到跳n级
+*跳1级，剩下n-1级，则剩下跳法是f(n-1)
+*跳2级，剩下n-2级，则剩下跳法是f(n-2)
+*所以f(n)=f(n-1)+f(n-2)+...+f(1)
+*因为f(n-1)=f(n-2)+f(n-3)+...+f(1)
+*所以f(n)=2*f(n-1)
+
+
+10.矩形覆盖
+我们可以用2*1的小矩形横着或者竖着去覆盖更大的矩形。请问用n个2*1的小矩形无重叠地覆盖一个2*n的大矩形，总共有多少种方法？
+比如n=3时，2*3的矩形块有3种覆盖方法
+
+public class Solution {
+    public int RectCover(int target) {
+        if (target == 0)
+            return 0;
+        else if (target == 1)
+            return 1;
+        int[] fib = new int[target + 1];
+        fib[0] = 1;
+        fib[1] = 1;
+        for (int i = 2; i <= target; i ++){
+            fib[i] = fib[i - 1] + fib[i - 2];
+        }
+        return fib[target];
+    }
+}
+//运行时间：13ms
+//占用内存：9400k
+*连写了4道斐波那契题的我都快默写了。。。
+*写完这道题我陷入了深深的思考：这种图形覆盖的计算题，如果没有做过原题，到底有多少人能反应上来这个东西它竟然考的是斐波那契数列。。。
+*也可能是我太菜了吧 T T
+*今天又菜了一整天 好累哦。。。睡了 明天继续刷～
