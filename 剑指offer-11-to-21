@@ -82,7 +82,7 @@ public class Solution {
 *还挺快的，高兴了。
 
 *然后突然想到还有一个直接调用Math.pow（）的方法，但是运行起来调lib方法反而没有暴力拆解快的感觉？
-方法三：调用library方法
+方法三：调用library Math.pow（）方法
 public class Solution {
     public double Power(double base, int exponent) {
         return Math.pow(base,exponent);
@@ -121,8 +121,36 @@ public class Solution {
 
 --------------------------------------------------------------------------------------------------------------
 
-14.
+14.链表中倒数第k个结点
+输入一个链表，输出该链表中倒数第k个结点。
+/*
+public class ListNode {
+    int val;
+    ListNode next = null;
 
+    ListNode(int val) {
+        this.val = val;
+    }
+}*/
+public class Solution {
+    public ListNode FindKthToTail(ListNode head,int k) {
+        ListNode curr = head;
+        ListNode currcount = head;
+        int count = 0;
+        while (currcount != null){
+            count ++;
+            currcount = currcount.next;
+        }
+        if (k > count)
+            return null;
+        for (int i = 0; i < count - k;i++)
+            curr = curr.next;
+        return curr;
+    }
+}
+
+//运行时间：23ms
+//占用内存：9672k
 --------------------------------------------------------------------------------------------------------------
 
 15.
@@ -142,12 +170,4 @@ public class Solution {
 --------------------------------------------------------------------------------------------------------------
 
 19.
-
---------------------------------------------------------------------------------------------------------------
-
-20.
-
---------------------------------------------------------------------------------------------------------------
-
-21.
 
