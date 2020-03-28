@@ -1,0 +1,153 @@
+//----------------------------------------Day one 28th March 2020----------------------------------------------
+-----------------11（新知识）
+
+11.二进制中1的个数
+*（有1吗？）
+输入一个整数，输出该数二进制表示中1的个数。其中负数用补码表示。
+public class Solution {
+    public int NumberOf1(int n) {
+        int sum = 0;
+        while(n != 0){
+            sum++;
+            n = n & (n - 1);
+        }
+        return sum;
+}
+//运行时间：12ms
+//占用内存：9416k
+*今天的第一道题就是长知识向
+*两个数字进行一次与运算可以消去原数字中的一个1
+*所以在变成全0之前，进行了多少次运算就有多少个1
+*没想到还能这么用- - 我一开始拿递归写出来了正整数的算法但是发现负数的就不会写了。。。
+*“&”运算符和“&&”的区别要查一下。
+*补充，查了一下区别，它们都是与运算符，区别是：
+&& operator: It only evaluates the next condition, if the condition before it is true. 
+If anyone condition is false, it does not evaluate the statement any further.
+（如果是false就不往后运行）
+& operator: It evaluates all conditions even if they are false. 
+Thus, any change in the data values due to the conditions will only be reflected in this case.
+（如果是false仍旧往后运行，直到运行完所有条件）
+& operator: It evaluates all conditions even if they are false. Thus, any change in the data values due to the conditions will only be reflected in this case.
+
+--------------------------------------------------------------------------------------------------------------
+
+12.数值的整数次方
+给定一个double类型的浮点数base和int类型的整数exponent。求base的exponent次方。
+保证base和exponent不同时为0。
+*刚看到这道题的我：不就是递归吗我会！
+*写了一半：不对哦如果要是负数咋办
+*后来用了判断是否小于0，如果小于0就取反计算然后把sum做分母 的方法
+方法一：暴力拆解（真香）之用tag去copy exponent
+*方法来自 https://blog.csdn.net/qq_37232304/article/details/103202918
+public class Solution {
+    public double Power(double base, int exponent) {
+        int tag = exponent;
+        double sum = 1.0;
+        if(exponent < 0){
+            tag = 0 - exponent;
+        }
+
+        for(int i = 0;i < tag;i ++){
+            sum = base * sum;
+        }
+        if(exponent < 0){
+            return 1/sum;
+        }
+        return sum;
+    }
+}
+//运行时间：52ms
+//占用内存：10424k
+
+方法二 boolean记录
+*自己另外写了boolean记录是否为负，直接改变exponent的方法
+public class Solution {
+    public double Power(double base, int exponent) {
+        double sum = 1.0;
+        boolean negative = false;
+        if(exponent < 0)
+        {
+            exponent = 0 - exponent;
+            negative = true;
+        }
+        for (int i = 0; i < exponent; i++)
+            sum *= base;
+        if (negative)
+            sum = 1/sum;
+        return sum;
+    }
+}
+//运行时间：45ms
+//占用内存：10560k
+*还挺快的，高兴了。
+
+*然后突然想到还有一个直接调用Math.pow（）的方法，但是运行起来调lib方法反而没有暴力拆解快的感觉？
+方法三：调用library方法
+public class Solution {
+    public double Power(double base, int exponent) {
+        return Math.pow(base,exponent);
+    }
+}
+//运行时间：66ms
+//占用内存：10364k
+
+--------------------------------------------------------------------------------------------------------------
+
+13.调整数组顺序使奇数位于偶数前面
+输入一个整数数组，实现一个函数来调整该数组中数字的顺序，
+使得所有的奇数位于数组的前半部分，所有的偶数位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。
+import java.util.ArrayList;
+public class Solution {
+    public void reOrderArray(int [] array) {
+        ArrayList<Integer> even = new ArrayList<>();
+        ArrayList<Integer> odd = new ArrayList<>();
+        for (int i : array){
+            if (i % 2 == 0)
+                even.add(i);
+            else
+                odd.add(i);
+        }
+        for(int i = 0; i < odd.size(); i++){
+            array[i] = odd.get(i);
+        }
+        for(int i = 0; i < even.size(); i++){
+            array[i + odd.size()] = even.get(i);
+        }
+    }
+}
+//运行时间：20ms
+//占用内存：9228k
+*自己写了个没有纯冒泡时间复杂度那么高的算法，但是查了一下网上有人写过一些冒泡算法优化，之后准备关注一下。
+
+--------------------------------------------------------------------------------------------------------------
+
+14.
+
+--------------------------------------------------------------------------------------------------------------
+
+15.
+
+--------------------------------------------------------------------------------------------------------------
+
+16.
+
+--------------------------------------------------------------------------------------------------------------
+
+17.
+
+--------------------------------------------------------------------------------------------------------------
+
+18.
+
+--------------------------------------------------------------------------------------------------------------
+
+19.
+
+--------------------------------------------------------------------------------------------------------------
+
+20.
+
+--------------------------------------------------------------------------------------------------------------
+
+21.
+
