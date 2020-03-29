@@ -1,8 +1,57 @@
 --------------------------------------------------------------------------------------------------------------
 
-20.
+20.包含min函数
+定义栈的数据结构，请在该类型中实现一个能够得到栈中所含最小元素的min函数（时间复杂度应为O（1））。
+注意：保证测试中不会当栈为空的时候，对栈调用pop()或者min()或者top()方法。
+
+*不得不吐槽一下这道题牛客网的方法说明真的不清楚，也不给举一个函数本地运行的例子，我一脸蒙，有思路都不知道该咋写。
+*相比之下leetcode的原函数都给的很清楚。
+*但是想想很多家的笔试也是这样子，就是不给你说清楚，就看你之前做没做过原题了。
+*不然当场就算写出来了都不知道为啥在自己本地还好好的，在它的编译器就是运行不出来。求职的小朋友是真滴卑微。
+*这道题的approach就是用两个栈，一个存最大值，一个存最小值
+*上网查了一下解法，但感觉都有点问题，参考思路自己写了一下。
+public class Solution {
+    Stack<Integer> sta = new Stack<>();
+    Stack<Integer> min = new Stack<>();
+    public void push(int node) {
+         if (min.empty() || node < min()){
+            min.push(node);
+        }
+        else
+            min.push(min());
+    }
+    public void pop() {
+        if (!sta.empty())//保证测试中不会当栈为空的时候，对栈调用pop()或者min()或者top()方法。
+            sta.pop();
+        if (!min.empty())//保证测试中不会当栈为空的时候，对栈调用pop()或者min()或者top()方法。
+            min.pop();
+    }
+    
+    public int top() {
+        return sta.peek();
+    }
+    public int min() {
+        return min.peek();
+    }
+}
+//运行时间：13ms
+//占用内存：9428k
+
+*小知识：
+*1.stack中的pop（）方法会返回并移除stack中第一位，而peek（）只返回不删除。
+*2.empty（） 如果stack空就返回true，否则返回false
+*3.search（element）：栈中查找，如果给定element存在stack中，则返回position对应int值，否砸返回-1.
+                     原文：It determines whether an object exists in the stack.
+                     If the element is found, it returns the position of the element from the top of the stack. 
+                     Else, it returns -1.
 
 --------------------------------------------------------------------------------------------------------------
 
 21.
 
+
+--------------------------------------------------------------------------------------------------------------
+
+22.
+
+--------------------------------------------------------------------------------------------------------------
